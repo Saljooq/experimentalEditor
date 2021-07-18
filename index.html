@@ -35,6 +35,7 @@ body {background-color: coral;}
 	var quill = new Quill('#editor', {
 	  theme: 'bubble'
 	});
+	document.getElementById("editor").innerHTML = "<h1>You selected     ---------> "+ input + ".json</h1>";
 	
 	//somehow get the contents of the obj
 	//quill.setContents(obj.ops);
