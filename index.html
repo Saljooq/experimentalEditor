@@ -1,0 +1,111 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- Include the Quill library -->
+    <script src="./quill.js"></script>
+    <!-- Include stylesheet -->
+    <link href="./snow.css" rel="stylesheet">
+    <link href="./bubble.css" rel="stylesheet">
+</head>
+<style>
+body {background-color: coral;}
+.heading{
+  text-align: center;
+}
+
+.editor {
+  margin-left: 10%;
+  margin-right: 10%;
+  background-color: white; 
+	height: 100%}
+
+.list {
+  text-align: center;}
+
+</style>
+<body>
+<div id="editor" class="editor">
+<div id="heading" class="heading"><h1>Welcome to the index</h1></div>
+<div id="list" class="list"></div>
+</div>
+<!-- Initialize Quill editor -->
+<script>
+
+	function createViewer(input){
+	var quill = new Quill('#editor', {
+	  theme: 'bubble'
+	});
+	
+	//somehow get the contents of the obj
+	//quill.setContents(obj.ops);
+	
+	console.log("we got here and we're fetching "+input + ".json" );
+	
+	}
+	
+	
+	var indexSource = [
+	["firstentry", "Fancier first name"],
+	["secondentry"],
+	[""],
+	
+	];
+
+	var locationParsed = indexSource.map(x =>{
+	
+	if (x.length===0 || x[0]==="")
+	{return ["missingEntry", "missingEntry"]}
+	else if (x.length == 1)
+	{return [x, x];}
+	else return x;
+	
+	});
+	
+	document.getElementById("list").innerHTML = locationParsed.map(x => {
+	var linkTo ="createViewer("+ x[0]+".html)";
+	return `<h3><p onClick=createViewer(${"\'"+x[0]+ "\'"})>${x[1]}</p></h3>`;
+	}
+	).join('');
+	
+	//mainArea = "something";
+	/*
+	locationParsed.map(x => 
+	<p>s</p>
+	//<a href=x[0]+".html">"something"</a>
+	
+	)
+*/
+	
+	
+	// getting the url for the current file
+	var windowLocation = window.location.href;
+	console.log(windowLocation);
+	
+	// taking out the html and replacing it with json
+	var jsonLocationArray = windowLocation.split(".");
+	console.log(jsonLocationArray);
+	jsonLocationArray.pop();
+	jsonLocationArray.push("json");
+	console.log(jsonLocationArray);
+	jsonLocationArray = jsonLocationArray.join(".");
+	console.log(jsonLocationArray);
+	
+	// making a fetch call to capture the json
+	
+	
+	/*function input_file_submit(){
+	var fileName = document.getElementById("filename").files[0];
+	var fr=new FileReader();
+	fr.onload = () =>  {
+	var obj = JSON.parse(fr.result);
+	console.log({obj});
+	quill.setContents(obj.ops);
+	};
+	fr.readAsText(fileName);	
+	}
+	*/
+</script>
+
+</body>
+</html>
+

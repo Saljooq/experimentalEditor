@@ -1,0 +1,110 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- Include the Quill library -->
+    <script src="./quill.js"></script>
+    <!-- Include stylesheet -->
+    <link href="./snow.css" rel="stylesheet">
+    <link href="./bubble.css" rel="stylesheet">
+	<link rel="stylesheet" href="./default.min.css">
+<script src="./highlight.min.js"></script>
+</head>
+<body>
+<div>
+
+  <input type="file" id="filename" name="filename" onChange="input_file_submit()">
+
+
+<!-- Create the editor container -->
+<div id="editor">
+  <p>Hello World!</p>
+  <p>Some initial <strong>bold</strong> text</p>
+  <p><br></p>
+  
+ 
+</div>
+<input type="text" id="output-name" />
+<button onClick="something()" id="content"> Submit this update</button>
+</div>
+
+
+<!-- Initialize Quill editor -->
+<script  >
+
+	var toolbarOptions = [
+  ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+  ['blockquote', 'code-block'],
+
+  [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+  [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+  [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+  [{ 'direction': 'rtl' }],                         // text direction
+
+  [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+  [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+  [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+  [{ 'font': [] }],
+  [{ 'align': [] }],
+	['formula'],
+  ['clean']                                         // remove formatting button
+];
+
+
+
+	var quill = new Quill('#editor', {
+	  modules: {
+		toolbar: toolbarOptions,//'#toolbar'//[['code-block']]  // Include button in toolbar
+	  },
+	  theme: 'snow', 
+	  //theme: 'bubble'
+	});
+
+
+  function something(){
+  var delta = quill.getContents();
+  
+  //console.log(delta);
+  //var delta = quill.container.innerHTML;
+  
+  saveAsFile(this, JSON.stringify(delta));
+  }
+  
+  function saveAsFile(link, content) {
+    var blob = new Blob([content], {type: "application/json"});
+    var url  = URL.createObjectURL(blob);
+
+    var a = document.createElement('a');
+	var fileName = document.getElementById("output-name").value;
+	a.download    = fileName + ".json";
+	a.href        = url;
+	
+	a.click();
+	
+	}
+	
+	function input_file_submit(){
+	
+	
+	var fileName = document.getElementById("filename").files[0];
+	
+	console.log({fileName});
+	
+	var fr=new FileReader();
+	
+	fr.onload = () =>  {
+	var obj = JSON.parse(fr.result);
+	//console.log({obj});
+	quill.setContents(obj.ops);
+	};
+            
+	fr.readAsText(fileName);
+
+	
+	}
+  
+</script>
+</body>
+</html>
+

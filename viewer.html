@@ -1,0 +1,64 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- Include the Quill library -->
+    <script src="./quill.js"></script>
+    <!-- Include stylesheet -->
+    <link href="./snow.css" rel="stylesheet">
+    <link href="./bubble.css" rel="stylesheet">
+</head>
+<style>
+body {background-color: coral;}
+.editor {
+  margin-left: 10%;
+  margin-right: 10%;
+  align-items: center;
+  justify-content: center;
+	background-color: white;  }
+
+</style>
+<body>
+<input type="file" id="filename" name="filename" onChange="input_file_submit()">
+
+<div id="editor" class="editor"></div>
+
+<!-- Initialize Quill editor -->
+<script>
+	var quill = new Quill('#editor', {
+	  theme: 'bubble'
+	});
+	
+	quill.disable();
+	
+	
+	// getting the url for the current file
+	var windowLocation = window.location.href;
+	console.log(windowLocation);
+	
+	// taking out the html and replacing it with json
+	var jsonLocationArray = windowLocation.split(".");
+	console.log(jsonLocationArray);
+	jsonLocationArray.pop();
+	jsonLocationArray.push("json");
+	console.log(jsonLocationArray);
+	jsonLocationArray = jsonLocationArray.join(".");
+	console.log(jsonLocationArray);
+	
+	// making a fetch call to capture the json
+	
+	
+	function input_file_submit(){
+	var fileName = document.getElementById("filename").files[0];
+	var fr=new FileReader();
+	fr.onload = () =>  {
+	var obj = JSON.parse(fr.result);
+	console.log({obj});
+	quill.setContents(obj.ops);
+	};
+	fr.readAsText(fileName);	
+	}
+</script>
+
+</body>
+</html>
+
